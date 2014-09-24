@@ -51,6 +51,4 @@ $().ready(function() {
   });
 
   nextTable();
-
-  document.documentElement.requestFullscreen();
 });
