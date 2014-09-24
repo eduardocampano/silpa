@@ -1,6 +1,6 @@
 body {
     font: 62.5%/1.65 "Open Sans",sans-serif;
-    background: url(bg.jpg) no-repeat;
+    background: url(bg.jpg);
     background-size:100%;
     overflow:hidden;
 }
