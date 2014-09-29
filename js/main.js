@@ -43,8 +43,8 @@ $().ready(function() {
       .append(Mustache.render('\
         <li class="question">\
           <h1>GRACIAS</h1>\
-          <h4>Toque terminar y entregue la tablet a la mesa {{(currentTable + 1)}}</h4>\
-        </li>', params))
+          <h4>Toque terminar y entregue la tablet a la mesa {{nextTable}}</h4>\
+        </li>', { nextTable: params.currentTable + 2 }))
       .bxSlider({
         pager: false
       });
