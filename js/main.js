@@ -12,14 +12,14 @@ var data = {
   ]
 };
 
-var slider;
+var slider = null;
 
 $().ready(function() {
 
   var showTable = function() {
     $('#table').text('Mesa ' + (params.currentTable + 1).toString());
 
-    if (typeof slider !== 'undefined')
+    if (slider != null)
       slider.destroySlider();
 
     slider = $('#slider')
