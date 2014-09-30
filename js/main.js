@@ -3,6 +3,7 @@ var params = {
   currentTable: 0,
   tables: []
 };
+
 var data = {
   questions: [
     { q: "¿Cuál es el color preferido de Silvina?", o: [ "Verde", "Amarillo", "Azul" ], a: 1 },
@@ -14,22 +15,20 @@ var data = {
 
 var slider = null;
 
-$().ready(function() {
+var showTable = function() {
+  $('#table').text('Mesa ' + (params.currentTable + 1).toString());
 
-  var showTable = function() {
-    $('#table').text('Mesa ' + (params.currentTable + 1).toString());
+  if (slider != null)
+    slider.destroySlider();
 
-    if (slider != null)
-      slider.destroySlider();
-
-    slider = $('#slider')
-      .empty()
-      .append(Mustache.render('\
+  slider = $('#slider')
+    .empty()
+    .append(Mustache.render('\
         <li class="question">\
           <h1>Bienvenidos</h1>\
           <h3>Responda las siguientes preguntas con la ayuda de las personas en su mesa. Pulse comenzar para ver la primera pregunta</h3>\
         </li>', params))
-      .append(Mustache.render('\
+    .append(Mustache.render('\
         {{#questions}}\
         <li class="question">\
           <h1>{{q}}</h1>\
@@ -40,65 +39,69 @@ $().ready(function() {
           </div>\
         </div>\
         {{/questions}}', data))
-      .append(Mustache.render('\
+    .append(Mustache.render('\
         <li class="question">\
           <h1>GRACIAS</h1>\
           <h3>Toque terminar y entregue la tablet a la mesa {{nextTable}}</h3>\
         </li>', { nextTable: params.currentTable + 2 }))
-      .bxSlider({
-        pager: false
-      });
+    .bxSlider({
+      pager: false
+    });
 
-    prepareButtons();
-  };
+  prepareButtons();
+};
 
-  var nextTable = function() {
-    params.currentTable++;
-    showTable();
-  };
+var nextTable = function() {
+  params.currentTable++;
+  showTable();
+};
 
-  var next = function() {
-    if (slider.getCurrentSlide() == slider.getSlideCount() -1) {
-      nextTable();
-      return;
-    }
+var next = function() {
+  if (slider.getCurrentSlide() == slider.getSlideCount() -1) {
+    nextTable();
+    return;
+  }
 
-    slider.goToNextSlide();
-    prepareButtons();
-  };
+  slider.goToNextSlide();
+  prepareButtons();
+};
 
-  var prev = function() {
-    slider.goToPrevSlide();
-    prepareButtons();
-  };
+var prev = function() {
+  slider.goToPrevSlide();
+  prepareButtons();
+};
 
-  var prepareButtons = function() {
-    var currentSlide = slider.getCurrentSlide();
-    $('#prev').toggle(currentSlide > 0);
-    var $next = $('#next');
+var prepareButtons = function() {
+  var currentSlide = slider.getCurrentSlide();
+  $('#prev').toggle(currentSlide > 0);
+  var $next = $('#next');
 
-    if (currentSlide > 0 && currentSlide < slider.getSlideCount() - 1)
-      $next.attr('disabled', 'disabled');
+  if (currentSlide > 0 && currentSlide < slider.getSlideCount() - 1 && slider.getCurrentSlideElement().find('button.selected').length == 0)
+    $next.attr('disabled', 'disabled');
 
-    if (slider.getCurrentSlide() == 0)
-      $next.text('comenzar');
-    else if (slider.getCurrentSlide() == slider.getSlideCount() -1)
-      $next.text('terminar');
-    else
-      $next.html('siguiente &gt;');
-  };
+  if (slider.getCurrentSlide() == 0)
+    $next.text('comenzar');
+  else if (slider.getCurrentSlide() == slider.getSlideCount() -1)
+    $next.text('terminar');
+  else
+    $next.html('siguiente &gt;');
+};
 
-  var saveCurrentStatus = function(button) {
-    var currentSlide = slider.getCurrentSlide();
-    if (currentSlide > 0 && currentSlide < slider.getSlideCount() -1) {
-      var selected = $(button).index();
-      if (params.tables[params.currentTable] == undefined)
-        params.tables.push({ table: params.currentTable + 1, responses: [] });
+var saveCurrentStatus = function(button) {
+  var currentSlide = slider.getCurrentSlide();
+  if (currentSlide > 0 && currentSlide < slider.getSlideCount() -1) {
+    var selected = $(button).index();
+    if (params.tables[params.currentTable] == undefined)
+      params.tables.push({ table: params.currentTable + 1, responses: [] });
 
-      params.tables[params.currentTable].responses[currentSlide - 1] = selected;
-      localStorage.setItem('params', JSON.stringify(params));
-    }
-  };
+    params.tables[params.currentTable].responses[currentSlide - 1] = selected;
+    localStorage.setItem('params', JSON.stringify(params));
+  }
+};
+
+$().ready(function() {
+
+  FastClick.attach(document.body);
 
   $('#next').click(next);
   $('#prev').click(prev);
