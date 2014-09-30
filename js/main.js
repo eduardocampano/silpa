@@ -27,7 +27,7 @@ $().ready(function() {
       .append(Mustache.render('\
         <li class="question">\
           <h1>Bienvenidos</h1>\
-          <h4>Responda las siguientes preguntas con la ayuda de las personas en su mesa. Pulse comenzar para ver la primera pregunta</h4>\
+          <h3>Responda las siguientes preguntas con la ayuda de las personas en su mesa. Pulse comenzar para ver la primera pregunta</h3>\
         </li>', params))
       .append(Mustache.render('\
         {{#questions}}\
@@ -43,7 +43,7 @@ $().ready(function() {
       .append(Mustache.render('\
         <li class="question">\
           <h1>GRACIAS</h1>\
-          <h4>Toque terminar y entregue la tablet a la mesa {{nextTable}}</h4>\
+          <h3>Toque terminar y entregue la tablet a la mesa {{nextTable}}</h3>\
         </li>', { nextTable: params.currentTable + 2 }))
       .bxSlider({
         pager: false
