@@ -1,15 +1,20 @@
 var params = {
   tableCount: 14,
   currentTable: 0,
+  currentSlide: 0,
   tables: []
 };
 
 var data = {
   questions: [
-    { q: "¿Cuál es el color preferido de Silvina?", o: [ "Verde", "Amarillo", "Azul" ], a: 1 },
-    { q: "¿A qué edad salió Pablo del closet?", o: [ "15", "18", "Hoy" ], a: 0 },
-    { q: "¿Quién se tomó todo el vino?", o: [ "La mona Gimenez", "Silchu", "Pablo" ], a: 2 },
-    { q: "¿Cual de estas prendas no usaria pablo?", o: [ "Pollera", "Zapatos con taco", "Medias de red" ], a: 0 }
+    { q: "¿Dónde nos conocimos?", o: [ "En casa de amigos", "En un boliche", "En el trabajo" ], a: 1 },
+    { q: "¿Cómo le propuso matrimonio Pablo?", o: [ "Personalmente arrodillado", "Por un whats app a 10mil KM de distancia", "Por telefono" ], a: 1 },
+    { q: "¿Quién cocina y lava?", o: [ "Pablo", "Silchu", "Entre los dos" ], a: 0 },
+    { q: "¿Qué fecha figura en el anillo de compromiso?", o: [ "10-01", "14-01", "14-07" ], a: 1 },
+    { q: "¿Cuántas veces viajaron a Mar del Plata?", o: [ "5", "1", "3" ], a: 2 },
+    { q: "¿De que manera rápida lo despierta a Pablo?", o: [ "Con alarma fuerte al oído", "Le miente con la hora", "Le dice que esta el churrero" ], a: 2 },
+    { q: "¿Son fanáticos de?", o: [ "Samsung", "LG", "Motorola" ], a: 2 },
+    { q: "¿Quién elegió el lugar de luna de miel?", o: [ "Silchu", "Pablo" ], a: 1 }
   ]
 };
 
@@ -45,7 +50,15 @@ var showTable = function() {
           <h3>Toque terminar y entregue la tablet a la mesa {{nextTable}}</h3>\
         </li>', { nextTable: params.currentTable + 2 }))
     .bxSlider({
-      pager: false
+      pager: false,
+      onSlideAfter: function($slideElement, oldIndex, newIndex) {
+        params.currentSlide = newIndex;
+        var table = params.tables[params.currentTable];
+        if (isQuestionSlide() && table != undefined) {
+          var selected = table.responses[newIndex];
+          $slideElement.find('.question button:eq(' + selected + ')').addClass('selected');
+        }
+      }
     });
 
   prepareButtons();
@@ -57,7 +70,7 @@ var nextTable = function() {
 };
 
 var next = function() {
-  if (slider.getCurrentSlide() == slider.getSlideCount() -1) {
+  if (isLastSlide()) {
     nextTable();
     return;
   }
@@ -71,17 +84,28 @@ var prev = function() {
   prepareButtons();
 };
 
+var isFirstSlide = function() {
+  return slider.getCurrentSlide() == 0;
+};
+
+var isLastSlide = function() {
+  return slider.getCurrentSlide() == slider.getSlideCount() -1;
+};
+
+var isQuestionSlide = function() {
+  return !isFirstSlide() && !isLastSlide();
+};
+
 var prepareButtons = function() {
-  var currentSlide = slider.getCurrentSlide();
-  $('#prev').toggle(currentSlide > 0);
+  $('#prev').toggle(!isFirstSlide());
   var $next = $('#next');
 
-  if (currentSlide > 0 && currentSlide < slider.getSlideCount() - 1 && slider.getCurrentSlideElement().find('button.selected').length == 0)
+  if (isQuestionSlide() && slider.getCurrentSlideElement().find('button.selected').length == 0)
     $next.attr('disabled', 'disabled');
 
-  if (slider.getCurrentSlide() == 0)
+  if (isFirstSlide())
     $next.text('comenzar');
-  else if (slider.getCurrentSlide() == slider.getSlideCount() -1)
+  else if (isLastSlide())
     $next.text('terminar');
   else
     $next.html('siguiente &gt;');
@@ -89,14 +113,13 @@ var prepareButtons = function() {
 
 var saveCurrentStatus = function(button) {
   var currentSlide = slider.getCurrentSlide();
-  if (currentSlide > 0 && currentSlide < slider.getSlideCount() -1) {
+  if (isQuestionSlide()) {
     var selected = $(button).index();
     if (params.tables[params.currentTable] == undefined)
       params.tables.push({ table: params.currentTable + 1, responses: [] });
-
     params.tables[params.currentTable].responses[currentSlide - 1] = selected;
-    localStorage.setItem('params', JSON.stringify(params));
   }
+  localStorage.setItem('params', JSON.stringify(params));
 };
 
 $().ready(function() {
@@ -113,8 +136,11 @@ $().ready(function() {
   });
 
   var savedParams = localStorage.getItem('params');
-  if (savedParams != null)
+  if (savedParams != null) {
     params = JSON.parse(savedParams);
-
-  showTable();
+    showTable();
+    slider.goToSlide(params.currentSlide);
+  } else {
+    showTable();
+  }
 });
