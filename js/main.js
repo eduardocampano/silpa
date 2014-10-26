@@ -1,5 +1,5 @@
 var params = {
-  tableCount: 14,
+  tableCount: 3,
   currentTable: 0,
   currentSlide: 0,
   tables: []
@@ -64,9 +64,46 @@ var showTable = function() {
   prepareButtons();
 };
 
-var nextTable = function() {
-  if (params.currentTable === params.tableCount) {
+var showResult = function() {
+  var tablePoints = [];
+  var maxPoints = -1;
+  var tableMaxPoints;
+  for (var i = 0; i < params.tableCount; i++) {
+    var points = calculatePoints(i);
+    tablePoints[i] = points;
+    if (points > maxPoints) {
+      maxPoints = points;
+      tableMaxPoints = i;
+    }
+  }
+  $('#table').text('');
+  if (slider != null)
+    slider.destroySlider();
 
+  slider = $('#slider')
+    .empty()
+    .append(Mustache.render('\
+        <li class="question">\
+          <h1>Y el ganador es...</h1>\
+        </li>'))
+    .append(Mustache.render('\
+        <li class="question">\
+          <h1>{{winnerTable}}</h1>\
+          <h3>Gracias!!!</h3>\
+        </li>', { winnerTable: tableMaxPoints + 1 }));
+};
+
+var calculatePoints = function(table) {
+  var points = 0;
+  for (var i = 0; i < data.questions.length; i++) {
+    points += params.tables[table].responses[i] === data.questions[i].a ? 1: 0;
+  }
+  return points;
+};
+
+var nextTable = function() {
+  if (params.currentTable === params.tableCount - 1) {
+    showResult();
   }
   params.currentTable++;
   showTable();
