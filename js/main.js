@@ -47,8 +47,12 @@ var showTable = function() {
     .append(Mustache.render('\
         <li class="question">\
           <h1>GRACIAS</h1>\
-          <h3>Toque terminar y entregue la tablet a la mesa {{nextTable}}</h3>\
-        </li>', { nextTable: params.currentTable + 2 }))
+          <h3>{{message}}</h3>\
+        </li>', {
+          message: params.currentTable === data.tableCount - 1 ?
+            'Toque terminar para revelar al ganador' :
+            'Toque terminar y pase la tablet a la mesa ' + (params.currentTable + 2)
+        }))
     .bxSlider({
       pager: false,
       onSlideAfter: function($slideElement, oldIndex, newIndex) {
@@ -90,7 +94,10 @@ var showResult = function() {
         <li class="question">\
           <h1>{{winnerTable}}</h1>\
           <h3>Gracias!!!</h3>\
-        </li>', { winnerTable: tableMaxPoints + 1 }));
+        </li>', { winnerTable: tableMaxPoints + 1 }))
+    .bxSlider({
+      pager: false
+    });
 };
 
 var calculatePoints = function(table) {
