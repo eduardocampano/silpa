@@ -13,7 +13,7 @@ var data = {
     { q: "¿Qué fecha figura en el anillo de compromiso?", o: [ "10-01", "14-01", "14-07" ], a: 1 },
     { q: "¿Cuántas veces viajaron a Mar del Plata?", o: [ "5", "1", "3" ], a: 2 },
     { q: "¿De que manera rápida lo despierta a Pablo?", o: [ "Con alarma fuerte al oído", "Le miente con la hora", "Le dice que esta el churrero" ], a: 2 },
-    { q: "¿Son fanáticos de?", o: [ "Samsung", "LG", "Motorola" ], a: 2 },
+    { q: "¿Son fanáticos de?", o: [ "Samsung", "LG", "Motorola" ], a: 1 },
     { q: "¿Quién elegió el lugar de luna de miel?", o: [ "Silchu", "Pablo" ], a: 1 }
   ]
 };
