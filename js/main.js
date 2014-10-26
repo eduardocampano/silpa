@@ -8,7 +8,7 @@ var params = {
 var data = {
   questions: [
     { q: "¿Dónde nos conocimos?", o: [ "En casa de amigos", "En un boliche", "En el trabajo" ], a: 1 },
-    { q: "¿Cómo le propuso matrimonio Pablo?", o: [ "Personalmente arrodillado", "Por un whats app a 10mil KM de distancia", "Por telefono" ], a: 1 },
+    { q: "¿Cómo le propuso matrimonio Pablo?", o: [ "Personalmente arrodillado", "Por un whatsapp a 10 mil KM de distancia", "Por teléfono" ], a: 1 },
     { q: "¿Quién cocina y lava?", o: [ "Pablo", "Silchu", "Entre los dos" ], a: 0 },
     { q: "¿Qué fecha figura en el anillo de compromiso?", o: [ "10-01", "14-01", "14-07" ], a: 1 },
     { q: "¿Cuántas veces viajaron a Mar del Plata?", o: [ "5", "1", "3" ], a: 2 },
@@ -65,6 +65,9 @@ var showTable = function() {
 };
 
 var nextTable = function() {
+  if (params.currentTable === params.tableCount) {
+
+  }
   params.currentTable++;
   showTable();
 };
