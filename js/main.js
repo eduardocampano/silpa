@@ -1,11 +1,11 @@
 var params = {
-  tableCount: 3,
   currentTable: 0,
   currentSlide: 0,
   tables: []
 };
 
 var data = {
+  tableCount: 3,
   questions: [
     { q: "¿Dónde nos conocimos?", o: [ "En casa de amigos", "En un boliche", "En el trabajo" ], a: 1 },
     { q: "¿Cómo le propuso matrimonio Pablo?", o: [ "Personalmente arrodillado", "Por un whatsapp a 10 mil KM de distancia", "Por teléfono" ], a: 1 },
@@ -72,7 +72,7 @@ var showResult = function() {
   var tablePoints = [];
   var maxPoints = -1;
   var tableMaxPoints;
-  for (var i = 0; i < params.tableCount; i++) {
+  for (var i = 0; i < data.tableCount; i++) {
     var points = calculatePoints(i);
     tablePoints[i] = points;
     if (points > maxPoints) {
@@ -109,7 +109,7 @@ var calculatePoints = function(table) {
 };
 
 var nextTable = function() {
-  if (params.currentTable === params.tableCount - 1) {
+  if (params.currentTable === data.tableCount - 1) {
     showResult();
   }
   params.currentTable++;
