@@ -1,6 +1,7 @@
 var params = {
   currentTable: 0,
   currentSlide: 0,
+  finish: false,
   tables: []
 };
 
@@ -92,12 +93,14 @@ var showResult = function() {
         </li>'))
     .append(Mustache.render('\
         <li class="question">\
-          <h1>{{winnerTable}}</h1>\
+          <h1>MESA {{winnerTable}}</h1>\
           <h3>Gracias!!!</h3>\
         </li>', { winnerTable: tableMaxPoints + 1 }))
     .bxSlider({
       pager: false
     });
+
+  prepareButtons();
 };
 
 var calculatePoints = function(table) {
@@ -111,6 +114,7 @@ var calculatePoints = function(table) {
 var nextTable = function() {
   if (params.currentTable === data.tableCount - 1) {
     showResult();
+    return;
   }
   params.currentTable++;
   showTable();
@@ -144,6 +148,12 @@ var isQuestionSlide = function() {
 };
 
 var prepareButtons = function() {
+  if (params.finish) {
+    $('#prev').hide();
+    $('#next').removeAttr('disabled').show().text('continuar');
+    return;
+  }
+
   $('#prev').toggle(!isFirstSlide());
   var $next = $('#next');
 
@@ -184,9 +194,14 @@ $().ready(function() {
 
   var savedParams = localStorage.getItem('params');
   if (savedParams != null) {
-    params = JSON.parse(savedParams);
-    showTable();
-    slider.goToSlide(params.currentSlide);
+    var parsedSavedParams = JSON.parse(savedParams);
+    if (confirm('Desea continuar con la mesa ' + (params.currentTable + 1).toString() + '?')) {
+      params = parsedSavedParams;
+      showTable();
+      slider.goToSlide(params.currentSlide);
+    } else {
+      showTable();
+    }
   } else {
     showTable();
   }
