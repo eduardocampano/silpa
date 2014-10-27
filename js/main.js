@@ -96,7 +96,7 @@ var showResult = function() {
         <li class="question">\
           <h1>GANADOR</h1>\
           <br/>\
-          <h1>MESA {{winnerTable}}!!!</h1>\
+          <h1 style="">MESA {{winnerTable}}!!!</h1>\
         </li>', { winnerTable: tableMaxPoints + 1 }))
     .bxSlider({
       pager: false

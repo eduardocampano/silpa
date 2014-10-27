@@ -41,6 +41,11 @@ body {
     padding:20px;
 }
 
+.main h1.winner {
+    font-size: 100px;
+    color:#f00;
+}
+
 .main h3 {
     color:#fff;
     font-size:30px;
