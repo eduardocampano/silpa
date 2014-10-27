@@ -81,6 +81,7 @@ var showResult = function() {
       tableMaxPoints = i;
     }
   }
+
   $('#table').text('');
   if (slider != null)
     slider.destroySlider();
@@ -93,8 +94,9 @@ var showResult = function() {
         </li>'))
     .append(Mustache.render('\
         <li class="question">\
-          <h1>MESA {{winnerTable}}</h1>\
-          <h3>Gracias!!!</h3>\
+          <h1>GANADOR</h1>\
+          <br/>\
+          <h1>MESA {{winnerTable}}!!!</h1>\
         </li>', { winnerTable: tableMaxPoints + 1 }))
     .bxSlider({
       pager: false
@@ -113,6 +115,8 @@ var calculatePoints = function(table) {
 
 var nextTable = function() {
   if (params.currentTable === data.tableCount - 1) {
+    params.finish = true;
+    saveCurrentStatus();
     showResult();
     return;
   }
@@ -150,7 +154,10 @@ var isQuestionSlide = function() {
 var prepareButtons = function() {
   if (params.finish) {
     $('#prev').hide();
-    $('#next').removeAttr('disabled').show().text('continuar');
+    if (!isLastSlide())
+      $('#next').removeAttr('disabled').show().text('continuar');
+    else
+      $('#next').hide();
     return;
   }
 
@@ -169,12 +176,14 @@ var prepareButtons = function() {
 };
 
 var saveCurrentStatus = function(button) {
-  var currentSlide = slider.getCurrentSlide();
-  if (isQuestionSlide()) {
-    var selected = $(button).index();
-    if (params.tables[params.currentTable] == undefined)
-      params.tables.push({ table: params.currentTable + 1, responses: [] });
-    params.tables[params.currentTable].responses[currentSlide - 1] = selected;
+  if (button) {
+    var currentSlide = slider.getCurrentSlide();
+    if (isQuestionSlide()) {
+      var selected = $(button).index();
+      if (params.tables[params.currentTable] == undefined)
+        params.tables.push({ table: params.currentTable + 1, responses: [] });
+      params.tables[params.currentTable].responses[currentSlide - 1] = selected;
+    }
   }
   localStorage.setItem('params', JSON.stringify(params));
 };
@@ -197,8 +206,12 @@ $().ready(function() {
     var parsedSavedParams = JSON.parse(savedParams);
     if (confirm('Desea continuar con la mesa ' + (parsedSavedParams.currentTable + 1).toString() + '?')) {
       params = parsedSavedParams;
-      showTable();
-      slider.goToSlide(params.currentSlide);
+      if (params.finish) {
+        showResult();
+      } else {
+        showTable();
+        slider.goToSlide(params.currentSlide);
+      }
     } else {
       showTable();
     }
