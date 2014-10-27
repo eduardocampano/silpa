@@ -195,7 +195,7 @@ $().ready(function() {
   var savedParams = localStorage.getItem('params');
   if (savedParams != null) {
     var parsedSavedParams = JSON.parse(savedParams);
-    if (confirm('Desea continuar con la mesa ' + (params.currentTable + 1).toString() + '?')) {
+    if (confirm('Desea continuar con la mesa ' + (savedParams.currentTable + 1).toString() + '?')) {
       params = parsedSavedParams;
       showTable();
       slider.goToSlide(params.currentSlide);
