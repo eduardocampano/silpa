@@ -6,7 +6,7 @@ var params = {
 };
 
 var data = {
-  tableCount: 3,
+  tableCount: 16,
   questions: [
     { q: "¿Dónde nos conocimos?", o: [ "En casa de amigos", "En un boliche", "En el trabajo" ], a: 1 },
     { q: "¿Cómo le propuso matrimonio Pablo?", o: [ "Personalmente arrodillado", "Por un whatsapp a 10 mil KM de distancia", "Por teléfono" ], a: 1 },
